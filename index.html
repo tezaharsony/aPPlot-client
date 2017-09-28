@@ -1,102 +1,81 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8">
+    <title>aPPlot</title>
+    <link rel="stylesheet" href="assets/css/login.css" type="text/css">
+    <script type="text/javascript">
+      if (localStorage.getItem('accesstoken') != null)
+        window.location = `${window.location.protocol}//${window.location.hostname}/home`
+    </script>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <title><Table> Applot</title>
+  <body>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../assets/css/home.css">
-  <link rel="stylesheet" href="../assets/css/drag.css" type="text/css">
-  <script type="text/javascript">
-    if (localStorage.getItem('accesstoken') == null)
-      window.location = `${window.location.protocol}//${window.location.hostname}`
-  </script>
-</head>
-
-<body>
-  <div id="home">
-    <h1>
-      <span class="blue">&lt;</span>Table<span class="blue">&gt;</span> <span class="yellow">Applot</span>
-    </h1>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="logout">
-            <button type="button" class="btn btn-danger" v-on:click="logout()">Logout</button>
-          </div>
-
-          <!-- Modal -->
-          <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog">
-
-              <!-- Modal content-->
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Applot Your File</h4>
+    <div id="login">
+      <div id="demo">
+        <img src="assets/images/applot.png" width="200px" height="auto">
+      </div>
+      <div id="teja">
+        <marquee direction="up" scrollamount="5">
+          <p>CEO Applot</p>
+          <img src="assets/images/teja.jpeg" width="200px" height="auto">
+        </marquee>
+      </div>
+      <div class="container" v-bind:class="{'log-in': panel}">
+        <div class="box"></div>
+        <div class="container-forms">
+          <div class="container-info">
+            <div class="info-item">
+              <div class="table">
+                <div class="table-cell">
+                  <p>Have an account?</p>
+                  <div class="btn" v-on:click="togglePanel()">Log in</div>
                 </div>
-                <div class="modal-body">
-                    <div id="upload-form" class="form-group files color">
-                      <input id="file-upload" type="file" class="form-control" multiple="" v-on:change="upload()">
-                    </div>
-                    <div id="loader" class="loader"></div>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="table">
+                <div class="table-cell">
+                  <p>Don't have an account?</p>
+                  <div class="btn" v-on:click="togglePanel()">Sign up</div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="text-center" style="margin: 15px 0">
-            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" id="button-modal">Applot</button>
+          <div class="container-form">
+            <div class="form-item log-in">
+              <div class="table">
+                <div class="table-cell">
+                  <p v-if="loginError" class="login-error">{{loginMessage}}</p>
+                  <input name="Username" placeholder="Username" type="text" v-model="loginUsername"/>
+                  <input name="Password" placeholder="Password" type="Password" v-model="loginPass"/>
+
+                  <div class="btn" v-on:click="login()">Log in</div>
+                </div>
+              </div>
+            </div>
+            <div class="form-item sign-up">
+              <div class="table">
+                <div class="table-cell">
+                  <input name="email" placeholder="Email" type="text" v-model="signupEmail"/>
+                  <input name="fullName" placeholder="Full Name" type="text" v-model="signupFullname"/>
+                  <input name="Username" placeholder="Username" type="text" v-model="signupUsername"/>
+                  <input name="Password" placeholder="Password" type="Password" v-model="signupPass"/>
+
+                  <div class="btn" v-on:click="signup()">Sign up</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="text-center">#</th>
-                <th>Filename</th>
-                <th class="text-center">Donnlot</th>
-                <th>Upload Date</th>
-                <th>Size</th>
-                <th class="text-center">Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(item, index) in computedList">
-                <td class="text-center">{{ index + 1 }}</td>
-                <td><img v-bind:src="item.icon" style="width:30px;"> {{ item.filename }}</td>
-                <td class="text-center">
-                  <a v-bind:href="item.url">
-                    <button class="btn btn-primary">
-                      <span class="glyphicon glyphicon-download"></span> Donnlot
-                    </button>
-                  </a>
-                </td>
-                <td>{{ item.uploaded_date }}</td>
-                <td>{{ item.size }}</td>
-                <td v-on:click="deleteFile(item.key)" class="text-center">
-                  <button class="btn btn-danger">
-                    <span class="glyphicon glyphicon-trash"></span>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
-
     </div>
-  </div>
 
-
-
-  <div class="darken">
-    <div class="loader" style="margin-top: calc(50vh - 60px)"></div>
-  </div>
-
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://unpkg.com/vue"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script type="text/javascript" src="../assets/js/home.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</body>
-
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue"></script>
+    <script	src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="assets/js/login.js"></script>
+    <!-- <script type="text/javascript" src="assets/js/script.js"></script> -->
+  </body>
 </html>
